@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    
+    <!-- #문자열 -->
+    <span>메시지: {{ msg }}</span>
+    <!-- Mustache 태그는 해당 데이터 객체의 msg 속성 값으로 대체 됨.
+        데이터 객체의 msg 속성이 변경 될 때마다 갱신됨. -->
+    <span v-once>다시는 변경하지 않습니다.: {{ msg }}</span>    
+    <!-- v-once 디렉티브를 사용하여 데이터 변경 시 업데이트 되지 않는 
+    일회성 보간을 수행할 수 있지만, 같은 노드의 바인딩에도 영향을 미침.-->
+
+    <!-- #원시 HTML -->
+    <p>Using mustaches: {{ rawHtml }}</p>
+    <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+
+    <script src="template_syntax.js"></script>
+</body>
+</html>
