@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    
+    <div id="example-1">
+        <button v-on:click="counter += 1">Add 1</button>
+        <p>위 버튼을 클릭 한 횟수는 {{ counter }} 입니다. </p>
+    </div>
+
+    <div id="example-2">
+        <!-- 'greet'는 메소드 이름으로 아래에 정의되어 있습니다. -->
+        <button v-on:click="greet">Greet</button>
+    </div>
+
+    <!-- 
+        인라인 메소드 핸들러
+        메소드 이름을 직접 바인딩 하는 대신 인라인 JavaScript 구문에 메소드 사용가능
+    -->
+    <div id="example-3">
+        <button v-on:click="say('hi')">Say Hi!</button>
+        <button v-on:click="say('what')">Say what</button>
+        
+        <button v-on:click="warn('Form cannot be submitted yet.', $event)">
+            Submit
+        </button>
+    </div>
+
+    <!--
+        이벤트 수식어
+        이벤트 핸들러 내부에서 event.preventDefault() 또는 event.stopPropagation()을
+        호출하는 것은 매우 보편적임.
+        메소드 내에서 쉽게 할 수 있지만, Dom 이벤트 세부 사항을 처리하는 대신
+        데이터 로직에 대한 메소드만 사용할 수 있으면 더 좋음.
+        Vue는 v-on 이벤트에 이벤트 수식어를 제공. 점으로 표시된 접미사.
+        - .stop
+        - .prevent
+        - .capture
+        - .self
+        - .once
+        - .passive
+    -->
+
+    <!-- 클릭 이벤트 전파가 중단 됨. -->
+    <a v-on:click.stop="doThis"></a>
+
+    <!-- 제출 이벤트가 페이지를 다시 로드하지 않음. -->
+    <form v-on:submit.prevent="onSubmit"></form>
+
+    <!-- 수식어는 체이닝 가능.-->
+    <a v-on:click.stop.prevent="doThat"></a>
+
+    <!-- 단순 수식어만 사용 가능 -->
+    <form v-on:submit.prevent></form>
+
+    <!-- 이벤트 리스너를 추가할 때 캡쳐모드를 사용 함.-->
+    <!-- 즉, 내부 엘리먼트를 대상으로 하는 이벤트가 해당 엘리먼트에서 처리되기 전에 처리.-->
+    <div v-on:click.capture="doThis">...</div>
+
+    <!--event.target이 엘리먼트 자체인 경우에만 트리거를 처리함.-->
+    <!--자식 엘리먼트에서는 안됨.-->
+    <div v-on:click.self="doThat">...</div>
+
+    <!--
+        관련 코드가 동일한 순서로 생성되므로 수식어를 사용할 때 순서를 지정하세요.
+        'v-onclick.prevent.self'를 사용하면 "모든 클릭"을 막을 수 있으며,
+        'v-onclick.self.prevent'는 엘리먼트 자체에 대한 클릭만 방지.
+    -->
+
+    <!-- 클릭 이벤트는 최대 한번만 트리거 됨.-->
+    <a v-on:click.once="doThis"></a>
+
+    <!--
+        Vue는 addEventlistener의 passive option에 해당하는 .passive 제공
+    -->
+
+    <!-- 스크롤의 기본 이벤트를 취소할 수 없음.-->
+    <div v-on:scroll.passive="onScroll"></div>
+
+    <!--
+        모바일 환경에서 성능향상에 도움이 됨.
+        브라우저는 핸들러가 event.preventDefault()를 호출할지 알지 못하므로
+        프로세스가 완료된 후 스크롤 함.
+        .passive 수식어는 이 이벤트가 기본 동작을 멈추지 않는다는 것을
+        브라우저에 알릴 수 있음.
+
+        '.passive'와 '.prevent' 함께 사용하지 말 것.
+        '.prevent'는 무시되고 브라우저는 오류를 발생시킴.
+        '.passive'는 이벤트의 기본 행동을 무시하지 않기를 원하는
+        브라우저와 상호작용함.
+    -->
+
+    <!--
+        키 수식어
+        키보드 이벤트를 청취할 때, 종종 공통 키 코드를 확인 해야 함.
+        Vue는 키 이벤트를 수신 할 때 v-on에 대한 키 수식어 추가 가능
+    -->
+
+    <!-- only call 'vm.submit()' when the 'key'is 'Enter'-->
+    <input v-on:keyup.enter="submit">
+
+    <!-- keyboardEvent.key 를 통해 노출된 유효 키 이름을 케밥 케이스로 변환하여 수식어로 사용 가능-->
+    <input v-on:keyup.page-down="onPageDown">
+    <!-- 위 예제에서 핸들러는 $event.key === 'PageDown' 일 때만 호출-->
+
+    <!-- 
+        # Key Codes
+        The use of 'keyCode' events [is deprecated] and may not be supproted in new browsers
+        Using keyCode attributes is also permitted.
+    -->
+
+    <input v-on:keyup.13="submit">
+
+    <!-- 
+        Vue provids aliases for the most commonly used key codes when neccesary for legacy browser supprot 
+        .enter
+        .tab
+        .deted ('Delete'와 'Backspace'키 모두를 캡처)   
+        .esc
+        .space
+        .up
+        .down
+        .left
+        .right
+
+        일부 키 ('.esc'와 모든 화살표 키)는 IE9에서 일관성 없는 'key'값
+        IE9 지원해야 하는 경우 내장 별칭 선호 됨.
+        전역 config.keyCodes 객체를 통해
+        사용자 지정 키 수식어 별칭 지정 가능.
+    -->
+
+    <!-- 
+        시스템 수식어 키 목록
+
+        다음 수식어를 사용해 해당 수식어 키가 눌러진 경우에만 마우스 또는 
+        키보드 이벤트 리스너를 트리거 할 수 있음.
+        .crtl
+        .alt
+        .shift
+        .meta
+
+        참고 : 매킨토시에서 meta는 command, windows는 window키        
+    -->
+    <!-- Alt + C -->
+    <input @keyup.alt.67='clear'>
+
+    <!-- Ctrl + Click -->
+    <div @click.ctrl="doSomething">Do Something</div>
+
+    <!-- 
+        수식어 키는 일반 키와 다르며 'keyup' 이벤트와 함께 사용되면
+        이벤트가 발생 할때 수식어 키가 눌려있어야 함.
+        즉, 'keyup.ctrl'는 'ctrl'을 누른상태에서 키를 놓으면 트리거.
+        'ctrl'키만 놓으면 트리거 되지 않음.
+    -->
+
+    <!--
+        # .exact 수식어
+        .exact 수식어는 다른 시스템 수식어와 조합해 그 핸들러가 실행되기 위해
+        정확한 조합이 눌러야 하는 것을 보여줌.
+    -->
+
+    <!-- Alt 또는 Shift와 함께 눌린 경우에도 실행 됨.-->
+    <button @click.ctrl="onClick">A</button>
+
+    <!--Ctrl 키만 눌려있을 때 실행 됨.-->
+    <button @click.ctrl.exact="onCtrlClick">A</button>
+
+    <!-- 아래 코드는 시스템 키가 눌리지 않은 상태인 경우에만 작동 함.-->
+    <button @click.exact="onClick">A</button>
+
+    <!-- 
+        #마우스 버튼 수식어
+
+        .left
+        .right
+        .middle
+
+        위 수식어는 특정 마우스 버튼에 의해 트리거 된 이벤트로 핸들러를 제한.
+    -->
+
+    <!-- 
+        왜 HTML로 된 리스너를 사용 할까?
+
+        v-on을 사용하면 몇가지 이점이 있음.
+        1. HTML 템플릿을 간단히 하여 JavaScript 코드 내에서 핸들러 함수 구현을
+        찾는 것이 더 쉽다.
+
+        2. JavaScript에서 이벤트 리스너를 수동으로 연결할 필요가 없으므로
+        ViewModel 코드는 순수 로직과 Dom이 필요하지 않음.
+        테스트가 쉬워짐.
+
+        3. ViewModel이 파기되면 모든 이벤트 리스너가 자동으로 제거 됨.
+        이벤트 제거에 대한 걱정이 필요 없어 짐. 
+    -->
+    
+
+
+
+
+
+
+    <script src="event_handling.js"></script>
+</body>
+</html>
