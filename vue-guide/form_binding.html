@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <!-- 
+        폼 입력 바인딩
+
+        기본 사용 법
+        v-model 디렉티브를 사용하여 폼 input과 textarea 엘리먼트에 양방향 데이터 바인딩
+        생성 할 수 있음.
+        입력 유형에 따라 엘리먼트를 업데이트 하는 올바른 방법을 자동으로 선택.
+        v-modle은 기본적으로 사용자 입력 이벤트에 대한 데이터를 
+        업데이트 하는 'syntax sugar'이며 일부 경우에 주의.
+
+        'v-model'은 모든 form 엘리먼트의 초기 'value'와 'checked' 그리고
+        'selceted' 속성 무시함. 
+        항상 Vue 인스턴스 데이터를 원본 소스로 취급.
+        텀포넌트의 'data' 옵션 안에 있는 JavaScript에서 초기 값 선언.
+
+        v-model은 내부적으로 서로 다른 속성을 사용. 
+        서로 다른 입력 요소에 대해 서로 다른 이벤트를 전송함.
+        
+        - text와 textarea 태그는 value 속성와 input 이벤트를 사용함.
+        - 체크박스들과 라디오 버튼들은 checked 속성과 change 이벤트 사용
+        - select 태그는 value를 prop으로, change를 이벤트로 사용.
+    -->
+
+    <!-- # 문자열 -->
+    <div id="example1">
+        <input v-model="message" placeholder="여기를 수정해 보세요">
+        <p>메시지: {{ message }}</p>
+    </div>
+
+    <!-- # 여러줄을 가진 문장 -->
+    <div id="example2">
+        <span>여러 줄을 가지는 메시지</span>
+        <p style="white-space: pre-line">{{ message }}</p>
+        <br>
+        <textarea v-model="message" placeholder="여러줄을 입력해봐"></textarea>
+    </div>
+
+    <!-- 
+        # 체크박스
+        하나의 체크박스는 단일 boolean 값을 가짐.
+    -->
+    <div id="example3">
+        <!-- <input type="checkbox" id="checkbox" v-model="checked">
+        <label for="checkbox">{{ checked }}</label>
+        <br> -->
+        <input type="checkbox"  id='jack' value="jack" v-model="checkedNames">
+        <label for="jack">jack</label>
+        <input type="checkbox"  id='john' value="john" v-model="checkedNames">
+        <label for="john">john</label>
+        <input type="checkbox"  id='Mike' value="Mike" v-model="checkedNames">
+        <label for="Mike">Mike</label>
+        <br>
+        <span>체크한 이름: {{ checkedNames }}</span>
+
+    </div>
+
+
+    <script>
+        var vm = new Vue({
+            el: '#example1',
+            data: {
+                message: ''
+            }
+        })
+
+        new Vue({
+            el: '#example2',
+            data: {
+                message: ''
+            }
+        })
+
+        new Vue({
+            el: '#example3',
+            data: {
+                // checked: false,
+                checkedNames: []
+            }
+        })
+    </script>
+</body>
+</html>
