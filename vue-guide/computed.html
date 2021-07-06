@@ -1,15 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
     <div id="example">
-        {{ message.split('').reverse.join('') }}
+        {{ message.split('').reverse().join('') }}
         <!-- 간단 명료하지 않음. -->
 
         <p> 원본 메시지: "{{ message }}"</p>
         <p>역순으로 표시한 메시지: "{{ reversedMessage }}"</p>
+
+        <p>뒤집힌 메시지: "{{ reversedMessage }}"</p>
+    </div>
+    <div id="example1">
+        <p>뒤집힌 메시지: "{{ reversedMessage() }}"</p>
+    </div>
+    <div id="demo">
+        {{ fullName }}
+    </div>
+    <div id="demo2">
+        {{ fullName }}
     </div>
     <script src="computed.js"></script>
 </body>

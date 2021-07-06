@@ -91,10 +91,61 @@
         key는 Vue가 노드를 식별하는 일반적인 메커니즘이기 때문에 
         v-for와 특별히 연관되지 않는 다른 용도로도 사용 됨.
     -->
-
-    
-    
+    <div id="filtering">
+        <li v-for="n in evenNumbers">{{ n }}</li>
+    </div>
         
+    <!-- 계산된 속성을 실행할 수 없는 상황(예: 중첩 된 v-for 루프 내부)-->
+    <div id="filtering2">
+        <li v-for="n in evenNumbers">{{ n }}</li>
+    </div>
+
+    <!-- 
+        Range v-for 
+        v-for 는 숫자를 사용할 수 있음. 템플릿 여러번 반복
+    -->
+    <div>
+        <span v-for="n in 10">{{ n }} </span>
+    </div>
+
+    <!-- 
+        v-for 템플릿
+        v-if와 마찬가지로 <template> 태그ㅡㄹ 사용해 여러 엘리먼트의 블럭을 렌더링 할 수 있음.
+    -->
+    <ul>
+        <template v-for="item in items">
+            <li>{{ item.msg }}</li>
+            <li class="divider" role="presentation"></li>
+        </template>
+    </ul>
+
+    <!--
+        v-for와 v-if
+        동시에 사용하는 것을 추천하지 않음.
+        동일 노드에 두가지 모두 있다면 v-for가 v-if보다 높은 우선순위.
+        v-if는 루프가 반복될 때마다 실행 됨.
+        일부 항목만 렌더링 하려는 경우 유용.
+    -->
+    <li v-for="todo in todos" v-if="!todo.isComplete">
+        {{ todo }}
+    </li>
+    <!--
+        위의 경우 완료되지 않은 할일만 렌더링 함. 
+        실행을 조건부로 하는 것이 목적 : 레퍼 엘리먼트(또는 <template>) 사용
+    -->
+
+    <ul v-if="todos.length">
+        <li v-for="todo in todos">
+            {{ todo }}
+        </li>
+    </ul>
+    <p v-else>No todos left!</p>
+
+    <!--
+        v-for와 컴포넌트 -> 컴포넌트 학습 후 돌아오기
+    -->
+
+
 
     <script src="list_rendering.js"></script>
 </body>

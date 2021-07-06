@@ -59,7 +59,122 @@
         <span>체크한 이름: {{ checkedNames }}</span>
 
     </div>
+    <!-- # 라디오 -->
+    <input type="radio" id="one" value="One" v-model="picked">
+    <label for="one">One</label>
+    <br>
+    <input type="radio" id="two" value="Two" v-model="picked">
+    <label for="two">Two</label>
+    <br>
+    <span>선택 {{ picked }}</span>
 
+    <!-- # 셀렉트 -->
+
+    <!-- 하나의 셀렉트 -->
+    <select v-model="selceted">
+        <option disabled value=''>Please select One</option>
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+    </select>
+    <span>선택함: {{ selected }}</span>
+    <!--
+        'v-model' 표현식의 초기 값이 어떤 옵션에도 없으면, '<select>' 엘리먼트는 
+        "선택없음" 상태로 렌더링 됨. IOS에서는 이 경우 변경 이벤트가 발생하지 않아 사용자가
+        첫 번째 항목을 선택할 수 없게 됨.
+        사용하지 않는 옵션에 빈 값을 넣는 것이 좋음.
+    -->
+
+    <!-- 다중 셀렉트(배열을 바인딩) -->
+    <select v-model="selected" multiple>
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+    </select>
+    <br>
+    <span>Selected: {{ selected }}</span>
+
+    <!-- v-for를 이용한 동적 옵션 렌더링 -->
+    <select v-model="selected">
+        <option v-for="option in options" v-bind:value="option.value">
+            {{ option.text }}
+        </option>
+    </select>
+    <span>Selected: {{ selected }}</span>
+
+    <!-- 
+        값 바인딩하기
+        라디오, 체크박스 및 셀렉트 옵션의 경우, v-model 바인딩 값은 보통 
+        정적인 문자열(또는 체크박스의 boolean) 입니다.
+    -->
+
+    <!-- 'picked'는 선택시 문자열 'a' 입니다.-->
+    <input type="radio" v-model="picked" value="a">
+
+    <!-- 'toggle'은 true 또는 false 입니다. -->
+    <input type="checkbox" v-model="toggle">
+
+    <!-- 'selected'는 "ABC" 선택시 "abc" 입니다. -->
+    <select v-model="selected">
+        <option value="abc">ABC</option>
+    </select>
+
+    <!--
+        그러나 때로 값을 Vue 인스턴스에 동적 속성에 바인딩 해야할 수 있음.
+        v-bind 사용 가능. v-bind 사용하면 입력 값을 문자열이 아닌 값에 바인딩 할 수 있음.
+    -->
+
+    <!-- # 체크박스 -->
+    <input
+        type="checkbox"
+        v-model="toggle"   
+        true-value="yes"
+        false-value="no"
+    >
+
+    <!--
+        'true-value'와 'false-value' 속성은 폼 전송시 체크되지 않은 박스를 포함하지 않기 때문에
+        입력의 'value' 속성에 영향을 미치지 않음.
+        두 값중 하나가 폼을 통해 전송 되려면 (예: '예' 또는 '아니오') 라디오를 대신 사용
+    -->
+    
+    <!-- # 라디오 -->
+    <input type="radio" v-model="pick" v-bind:value="a">
+
+    <!-- # 셀렉트 옵션 -->
+    <select v-model="selected">
+        <!-- inline object literal -->
+        <option v-bind:value="{ number: 123 }">123</option>
+    </select>
+
+    <!--
+        수식어
+
+        # .lazy
+        기본적으로, v-model은 각 입력 이벤트 후 입력과 데이터를 동기화.
+        (단, 앞에서 설명은 IME 구성은 제외)
+        .lazy 수식어를 추가하여 change 이벤트 이후에 동기화 할 수 있음.
+    -->
+
+    <!-- 'input' 대신 'change' 이후에 동기화 됨.  -->
+    <input v-model.lazy="msg">
+
+    <!-- 
+        #.number 
+        사용자 입력이 자동으로 숫자로 형변환 됨.
+    -->
+    <input v-model.number="age" type="number">
+    <!--
+        type="number"를 사용하는 경우에도 HTML 입력 엘리먼트 값은 항상 문자열을 반환하기 떄문에 
+        이것은 종종 유용하게 사용 할 수 있음.
+        if the value cannot be parsed with parseFloat(), then the original value is returned.
+    -->
+
+    <!--
+        #.trim
+        v-model이 관리하믄 input을 자동으로 trim 하기 원하면, trim 수정자 추가.
+    -->
+    <input v-model.trim="msg">
 
     <script>
         var vm = new Vue({
@@ -83,6 +198,30 @@
                 checkedNames: []
             }
         })
+
+        new Vue({
+            el: '...',
+            data:{
+                selected: 'A',
+                options: [
+                    { text:'One', value: 'A' },
+                    { text:'Two', value: 'B' },
+                    { text:'Three', value: 'C' }
+                ]
+            }
+        })
+
+        //체크 된 경우
+        vm.toggle === 'yes'
+        //체크 되지 않은 경우
+        vm.toggle === 'no'
+
+        // 라디오 : 체크하면 
+        vm.pick === vm.a
+
+        // 셀렉트 옵션 : 선택하면
+        typeof vm.selected // => 'object'  
+        vm.selected.number // => 123
     </script>
 </body>
 </html>
