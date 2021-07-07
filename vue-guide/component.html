@@ -456,6 +456,124 @@
         </component>
     </keep-alive>
 
+    <!--
+        기타
+
+        # 재사용 가능한 컴포넌트 제작하기
+
+        컴포넌트를 작성할 때 나중에 다른 곳에서 다시 사용할 것인지에 대한 여부를 명심하는 것이 좋음.
+        일회용 컴포넌트가 단단히 결합되어도 상관 없지만, 
+        재사용 가능한 컴포넌트는 깨끗한 공용 인터페이스를 정의 해야 하며 
+        사용된 컨텍스트에 대한 가정을 하지 않아야 함.
+
+        Vue 컴포넌트의 API는 prop, 이벤트 및 슬롯의 세 부분으로 나뉨
+        - Props는 외부환경이 데이터를 컴포넌트로 전달하도록 허용
+        - 이벤트를 통해 컴포넌트가 외부 환경에서 사이드이펙트를 발생할 수 있도록 함.
+        - 슬롯을 사용하면 외부 환경에서 추가 컨텐츠가 포함 된 컴포넌트를 작성할 수 있음.
+        v-bind 와 v-on을 위한 전용 약어문을 사용하여 의도를 명확하고 간결하게 템플릿에 전달 할 수 있음.   
+    -->
+
+    <my-component
+        :foo="baz"
+        :bar="qux"
+        @event-a="doThis"
+        @event-b="doThat"
+    >
+        <img slot="icon" src="...">
+        <p slot="main-text">Hello!</p>
+    </my-component>
+
+    <!--
+        # 자식 컴포넌트 참조
+
+        props나 이벤트가 있었음에도 불구하고 때때로 JavaScript로 하위 컴포넌트에 직접 
+        액세스 해야 할 수도 있음.
+        이를 위해 ref 를 이용하여 참조 컴포넌트 ID를 자식 컴포넌트에 할당해야 함.
+    -->
+
+    <div id="parent">
+        <user-profile ref="profile"></user-profile>
+    </div>
+
+    <!-- HTML 템플릿 내에서 kebab-case와 동등한 것을 사용해야 함. -->
+    <!-- HTML 템플릿에서 항상 kebab-case를 사용하세요-->
+    <kebab-cased-component></kebab-cased-component>
+    <camel-cased-component></camel-cased-component>
+    <pascal-cased-component></pascal-cased-component>
+
+    <kebab-cased-component></kebab-cased-component>
+
+    <camel-cased-component></camel-cased-component>
+    <camelCasedComponent></camelCasedComponent>
+
+    <pascal-cased-component></pascal-cased-component>
+    <pascalCasedComponent></pascalCasedComponent>
+    <PascalCasedComponent></PascalCasedComponent>
+
+    <!--
+        이것은 PascalCase가 가장 보편적인 '선언적 컨벤션' 임을 의미.
+        케밥 케이스는 가장 보편적으로 사용하는 '컨벤션'
+
+        컴포넌트가 slot 엘리먼트를 통해 내용을 전달받지 못하면 이름 뒤에 '/'를
+        사용하여 자체적으로 닫을 수도 있음.
+    -->
+    <my-component/>
+
+    <!-- 
+        이것은 자기 닫는 사용자 정의 엘리먼트가 유효한 HTML이 아니므로 문자열 템플릿 내에서만 작동
+        브라우저의 기본 파서는 이를 이해하지 못함.
+    -->
+
+    <!--
+        # 컴포넌트 사이의 순환 참조
+
+        Finder나 파일 탐색기와 같이 파일 디렉토리 트리를 작성한다고 가정해 봄.
+        이 템플릿으로 tree-folder 컴포넌트를 가질 수 있음.
+    -->
+    <p>
+        <span>{{ folder.name }}</span>
+        <tree-folder-contents :children="folder.children" />
+    </p>
+
+    <!-- 템플릿이 있는 tree-folder-contents 컴포넌트 -->
+    <ul>
+        <li v-for="child in children">
+            <tree-folder v-if="child.children" :folder="child" />
+            <span v-else>{{ child.name }}</span>
+        </li>
+    </ul>
+
+    <!--
+        # 인라인 템플릿
+
+        하위 컴포넌트에 inline-template 이라는 특수한 속성이 존재할 때, 컴포넌트는
+        그 내용을 분산 된 내용으로 취급하지 않고 템플릿으로 사용함.
+        따라서 보다 유연한 템플릿 작성이 가능.
+    -->
+
+    <my-component inline-template>
+        <div>
+            <p>이것은 컴포넌트의 자체 템플릿으로 컴파일 됨.</p>
+            <p>부모가 만들어낸 내용이 아님.</p>
+        </div>
+    </my-component>
+
+    <!--
+        그러나, inline-template은 템플릿의 범위를 추론하기 더 어렵게 만듦.
+        가장 좋은 방법은 template 옵션을 사용하거나 
+        .vue 파일의 template 엘리먼트를 사용하여 컴포넌트 내부에 템플릿을 정의하는 것.
+    -->
+
+    <!--
+        # X-Templates
+
+        템플리트를 정의하는 또 다른 방법은 text/x-template 유형의 스크립트 엘리먼트 내부에 ID로
+        템플릿을 참조하는 것.
+    -->
+    <script type="text/x-template" id="hello-world-template">
+        <p>Hello hello hello</p>
+    </script>
+
     <script src="component.js"></script>
 </body>
 </html>
