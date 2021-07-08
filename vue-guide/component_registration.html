@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <component-a></component-a>
+        <component-b></component-b>
+        <component-c></component-c>
+    </div>
+<!-- 이렇게 등록한 컴포넌트들은 모든 하위 컴포넌트에도 사용 가능함. 
+    즉, 위의 3개 컴포넌트들은 각각의 컴포넌트 안에서도 사용할 수 있음. -->
+
+    <BaseInput
+        v-model="searchText"
+        @keydown.enter="search"
+    />
+    <BaseButton @click="search">
+        <BaseIcon name="search" />
+    </BaseButton>
+
+    <script src="component_registration.js"></script>
+</body>
+</html>

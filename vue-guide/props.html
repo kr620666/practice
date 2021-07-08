@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <!-- HTML에서의 kebab-case -->
+    <blog-post postTitle='hello!'></blog-post>
+
+<!--
+    * [정적&동적 prop 전달하기]
+    * 
+    * 아래는 정적인 prop
+-->
+
+    <!-- 변수에 담긴 값을 동적으로 할당 -->
+    <blog-post v-bind:title="post.title"></blog-post>
+
+    <!-- 복잡한 표현식의 값을 동적으로 할당 -->
+    <blog-post
+        v-bind:title="post.title + ' by ' + post.author.name"
+    ></blog-post>
+
+    <!-- 위 두가지 경우 모두 문자열 형태의 변수를 전달. 
+        실제로는 모든 카입의 변수가 prop으로 전달 될 수 잇음. -->
+
+    <!--
+        # 숫자형(Number) 전달
+
+        '42'는 정적인 값이지만, Vue에서 해당 값이 숫자라는 것을 알 수 있도록 하기 위해
+        v-bind를 이용해 문자열이 아닌 JavaScript 표현식이라는 것을 알려줌.
+    -->
+    <blog-post v-bind:likes="42"></blog-post>
+
+    <!-- 변수의 값을 동적으로 할당할 수도 있음. -->
+    <blog-post v-bind:likes="post.likes"></blog-post>
+
+    <!-- 
+        # 논리 자료형(Boolean) 전달
+
+        값이 없는 prop은 'true'를 전달
+    -->
+    <blog-post is-published></blog-post>
+
+    <!--
+        'false'는 정적인 값이지만, Vue에서 해당 값이 논리 자료형이라는 것을 알 수 있도록 하기 위해
+        v-bind를 이용해 문자열이 아닌 JavaScript 표현식이라는 것을 알려줍니다.
+    -->
+    <blog-post v-bind:is-published="false"></blog-post>
+
+    <!-- 변수의 값을 동적으로 할당할 수도 있음.-->
+    <blog-post v-bind:is-published="post.isPublished"></blog-post>
+
+    <!--
+        # 오브젝트 (Object) 전달
+
+        해당 오브젝트는 정적인 값이지만, Vue에서 해당 값이 배열이라는 것을 알 수 
+        있도록 하기 위해, v-bind를 이용해 문자열이 아닌 JavaScript 표현식이라는 것을
+        알려줌.
+    -->
+    <blog-post
+        v-bind:author="{
+            name: 'Veronica,
+            company: 'Veridian Dynamics'
+        }"
+    ></blog-post>
+
+    <!-- 변수의 값을 동적으로 할당할 수도 있음.-->
+    <blog-post v-bind:author="post.author"></blog-post>
+
+    <!-- 아래와 같이 작성하는 것은 -->
+    <blog-post v-bind="post"></blog-post>
+
+    <!-- 아래와 같이 동작 -->
+    <blog-post
+        v-bind:id="post.id"
+        v-bind:title="post.title"
+    ></blog-post>
+
+    <!--
+        [Prop]이 아닌 속성
+
+        Prop이 아닌 속성은 컴포넌트에 전달되긴 하지만 대응되는 prop이 정의되지 않음.
+
+        명확하게 정의된 prop을 통해서 자식 컴포넌트에 정보를 전달하는 것이 권장되긴 함.
+        컴포넌트 라이브러리를 만드는 등의 경우 어떤 맥락에서 해당 컴포넌트가 사용될지를
+        확실히 상정할 수 없는 경우가 있음. 
+        이러한 경우에 대응하기 위해서 컴포넌트는 임의의 속성값을 받아와 
+        컴포넌트의 루트 엘리먼트에 추가해 줄 수 있음.
+
+        예를 들어, data-date-picker 속성이 필요한 부트스트랩의 서드파티 컴포넌트인 
+        bootstrap-date-inpu 을 사용하는 상황을 가정해 본다면, 
+        아래와 같이 컴포넌트 인스턴스에 속성을 추가해 줄 수 있음.
+    -->
+    <bootstrap-date-input data-date-picker="activated"></bootstrap-date-input>
+
+    <!-- data-date-picker="activated" 속성은 bootstrap-date-input의 루트 엘리먼트에 자동 추가-->
+
+    <!--
+        # 기존 속성의 대체 및 병합
+
+        아래 코드가 bootstrap-date-input의 템플릿이라고 생각해보면
+    -->
+    <input type="date" class="form-control">
+
+    <!-- 날짜 선택 플러그인의 테마를 설정하기 위해서는 아래와 같이 특정 클래스를 작성 -->
+    <bootstrap-date-input
+        data-date-picker="activated"
+        class="date-picker-theme-dark"
+    ></bootstrap-date-input>
+
+    <!-- 
+        이 경우, 두 개의 각각 다른 값이 class에 선언 됨. 
+        - form-control : 컴포넌트 템플릿으로부터 부여됨.
+        - date-picker-theme-dark : 컴포넌트 부모로부터 전달받아 부여됨.
+
+        대부분 속성의 경우, 전달받은 속성이 기존에 선언된 속성을 대체함.
+        예를 들어, type="text"를 type="date"가 선언된 컴포넌틍 전달하는 경우에는 속성이 대체되고
+        문제를 일으키게 될 가능성이 생김.
+        class와 style 속성의 경우에는 앞의 form-control과 date-picker-theme-dark의 예제와 같이 
+        두 개의 값이 합쳐져서 적용 됨.
+    -->
+
+
+    <script src="props.js"></script>
+</body>
+</html>
