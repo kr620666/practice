@@ -22,11 +22,20 @@ export default {
         addTodo(){
             //inputbox 빈값인지 체크, 빈값이 아니면 로직 수행
             if(this.newTodoItem !== ''){
-                var obj = {title: this.newTodoItem, done: false};
-                this.$emit('addTodo', obj);
+                const todoIndex = "todo_";
+                const todoTime = this.doTimeStamp();
+                const localStorageKey = todoIndex + todoTime;
+                const item = {index:localStorageKey, title: this.newTodoItem, done: false};
+                this.$emit('addTodo', item);
                 //inputbox 초기화
                 this.clearInputbox();
             }
+        },
+        doTimeStamp(){  
+          const now = new Date();
+          const timeStamp = now.getMonth() + 1 + "_" + now.getDate() + "_" + now.getTime();
+
+          return timeStamp;
         },
         clearInputbox(){
             this.newTodoItem = '';

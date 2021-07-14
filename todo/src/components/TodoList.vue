@@ -1,10 +1,10 @@
 <template>
   <section>
       <ul>
-          <li v-for="(todoItem, index) in propsdata" :key="todoItem">
+          <li v-for="(todoItem) in todoList" :key="todoItem">
               <p v-bind:class="{done: todoItem.done}">{{ todoItem.title }}</p>
-                <input type="checkbox" v-on:change="todoItem.done = true">완료
-                <button v-on:click="removeTodo(todoItem, index)">삭제</button>              
+                <input type="checkbox" :checked="todoItem.done" v-on:change="changeState(todoItem)">완료
+                <button v-on:click="removeTodo(todoItem)">삭제</button>              
           </li>
       </ul>
   </section>
@@ -17,10 +17,13 @@ export default {
             todoItems: []
         }
     },
-      props: ['propsdata'],
+      props: ['todoList'],
       methods: {
-        removeTodo(todoItem, index){
-          this.$emit('removeTodo', todoItem, index);
+        removeTodo(todoItem){
+          this.$emit('removeTodo', todoItem);
+        },
+        changeState(todoItem){
+          this.$emit('changeState', todoItem);
         }
       }
   }    

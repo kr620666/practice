@@ -1,7 +1,7 @@
 <template>
   <div id="todo">
     <TodoHeader v-on:addTodo="addTodo"></TodoHeader>
-    <TodoList v-bind:propsdata="todoItems" v-on:removeTodo="removeTodo"></TodoList>
+    <TodoList v-bind:todoList="todoItems" v-on:removeTodo="removeTodo" v-on:changeState="changeState"></TodoList>
   </div>
 </template>
 
@@ -13,14 +13,15 @@ export default {
    data(){
         return {
           toggle: false,
-            todoItems: []
+          todoItems: []
         }
     },
     created(){
         if(localStorage.length > 0){
+            const todoIndex = "todo_";
             for(var i = 0; i < localStorage.length; i++){
-              if (localStorage.key(i) != "loglevel:webpack-dev-server") {
-                this.todoItems.push(localStorage.key(i));
+              if (localStorage.key(i).includes(todoIndex)) {
+                this.todoItems.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
               }
             }
         }
@@ -28,18 +29,26 @@ export default {
     methods: {
         addTodo(todoItem){
             //로컬스토리지에 데이터를 추가하는 로직
-            localStorage.setItem(todoItem, todoItem);
-            if (todoItem != "loglevel:webpack-dev-server"){
+            const todoIndex = "todo_";
+            localStorage.setItem(todoItem.index, JSON.stringify(todoItem));
+            if (todoItem.index.includes(todoIndex)){
               this.todoItems.push(todoItem);
             }
         },
-        removeTodo(todoItem, index){
-          localStorage.removeItem(todoItem.title);
+        removeTodo(todoItem){
+          localStorage.removeItem(todoItem.index);
           //splice()는 첫번째 인자값(index)로부터 두번째 인자값(1)만큼을 삭제한다.
-          this.todoItems.splice(index, 1);
+          
+          const indexNum = this.todoItems.findIndex(todo => todo.index == todoItem.index);
+          this.todoItems.splice(indexNum, 1);
+        },
+        changeState(todoItem){
+          todoItem.done = !todoItem.done;
+          localStorage.setItem(todoItem.index, JSON.stringify({index:todoItem.index, title: todoItem.title, done: todoItem.done}))
         }
+
     },
-   components: {
+    components: {
       TodoHeader,
       TodoList  
   }
