@@ -22,20 +22,18 @@ export default {
         addTodo(){
             //inputbox 빈값인지 체크, 빈값이 아니면 로직 수행
             if(this.newTodoItem !== ''){
-                const todoIndex = "todo_";
+                const todoIndex = "todo";
                 const todoTime = this.doTimeStamp();
                 const localStorageKey = todoIndex + todoTime;
-                const item = {index:localStorageKey, title: this.newTodoItem, done: false};
-                this.$emit('addTodo', item);
+                this.$store.commit('addTodo', {id:localStorageKey, title: this.newTodoItem, done: false});
+                this.$store.getters.updateLocalStorage;
                 //inputbox 초기화
                 this.clearInputbox();
             }
         },
         doTimeStamp(){  
           const now = new Date();
-          const timeStamp = now.getMonth() + 1 + "_" + now.getDate() + "_" + now.getTime();
-
-          return timeStamp;
+          return `${now.getMonth() + 1 }_${now.getDate()}_${now.getTime()}`;
         },
         clearInputbox(){
             this.newTodoItem = '';
