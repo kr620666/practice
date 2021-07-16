@@ -1,37 +1,63 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import LocalStore from "./local.store";
 
 Vue.use(Vuex);
 
+const localStore = new LocalStore("TODO");
 const store = new Vuex.Store({
   state: {
     todoItems: [],
   },
   getters: {
-    showList(state) {
-      if (localStorage.length > 0) {
-        state.todoItems = JSON.parse(localStorage.getItem("TODO"))["todoItems"];
-      }
-    },
-    updateLocalStorage(state) {
-      localStorage.setItem("TODO", JSON.stringify(state));
+    todoList: (state) => {
+      return state.todoItems;
     },
   },
   mutations: {
+    setTodoList(state, todoItems = []) {
+      state.todoItems = todoItems;
+    },
     addTodo(state, payload) {
-      //로컬스토리지에 데이터를 추가하는 로직
       state.todoItems.push(payload);
     },
     removeTodo(state, payload) {
-      //splice()는 첫번째 인자값(index)로부터 두번째 인자값(1)만큼을 삭제한다.
+      state.todoItems.splice(payload, 1);
+    },
+    changeDone(state, payload) {
+      Vue.set(state.todoItems, payload.id, payload);
+    },
+  },
+  actions: {
+    fetchTodoList({ commit }) {
+      const todoList = localStore.storeToJson();
+      commit("setTodoList", todoList);
+    },
+    createTodo({ commit }, { id, title }) {
+      const todo = {
+        id,
+        title,
+        done: false,
+      };
+      localStore.save(todo);
+      commit("addTodo", todo);
+    },
+    deleteTodo({ commit, state }, payload) {
       const indexNum = state.todoItems.findIndex(
         (todo) => todo.id === payload.id
       );
-      state.todoItems.splice(indexNum, 1);
+      localStore.remove(payload.id);
+      commit("removeTodo", indexNum);
     },
-    changeDone(state, payload) {
+    statusChange({ commit }, payload) {
       payload.done = !payload.done;
-      Vue.set(state.todoItems, payload.id, payload.done);
+      const todo = {
+        id: payload.id,
+        title: payload.title,
+        done: payload.done,
+      };
+      localStore.save(todo);
+      commit("changeDone", payload.done);
     },
   },
 });

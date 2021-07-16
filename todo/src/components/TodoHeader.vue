@@ -5,7 +5,7 @@
     </h1>
     <div class="input" v-if="toggle">
       <input type="text" v-model="newTodoItem"/>
-      <button v-on:click="addTodo">추가</button>
+      <button v-on:click="addTodo()">추가</button>
     </div>    
  </div>
 </template>
@@ -20,14 +20,9 @@ export default {
   },
     methods: {
         addTodo(){
-            //inputbox 빈값인지 체크, 빈값이 아니면 로직 수행
             if(this.newTodoItem !== ''){
-                const todoIndex = "todo";
-                const todoTime = this.doTimeStamp();
-                const localStorageKey = todoIndex + todoTime;
-                this.$store.commit('addTodo', {id:localStorageKey, title: this.newTodoItem, done: false});
-                this.$store.getters.updateLocalStorage;
-                //inputbox 초기화
+                const localStorageKey = "todo_" + this.doTimeStamp();
+                this.$store.dispatch('createTodo', {id:localStorageKey, title: this.newTodoItem});
                 this.clearInputbox();
             }
         },

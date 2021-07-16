@@ -4,8 +4,8 @@
           <li v-for="(todoItem) in todoList" :key="todoItem">
               <p v-bind:class="{done: todoItem.done}">{{ todoItem.title }}</p>
                 <div class="changeTodo">
-                  <input type="checkbox" :checked="todoItem.done" v-on:change="changeDone(todoItem)">완료
-                  <button v-on:click="removeTodo(todoItem)">삭제</button>              
+                  <input type="checkbox" :checked="todoItem.done" v-on:change="statusChange(todoItem)">완료
+                  <button v-on:click="deleteTodo(todoItem)">삭제</button>              
                 </div>
           </li>
       </ul>
@@ -13,24 +13,18 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
     computed: {
-      todoList (){
-        return this.$store.state.todoItems;
-      }
-    },
-    created(){
-      this.$store.getters.showList;
+      ...mapGetters([
+        'todoList'
+      ])
     },
     methods: {
-      removeTodo(todoItem){
-        this.$store.commit('removeTodo', todoItem);
-        this.$store.getters.updateLocalStorage;
-      },
-      changeDone(todoItem){
-        this.$store.commit('changeDone', todoItem);
-        this.$store.getters.updateLocalStorage;
-      }
+      ...mapActions([
+        'deleteTodo', 'statusChange'
+      ]),
     }
   }    
 

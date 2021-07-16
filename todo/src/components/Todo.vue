@@ -10,6 +10,9 @@ import TodoHeader from "./TodoHeader.vue";
 import TodoList from "./TodoList.vue";
 
 export default {
+  created(){
+      this.$store.dispatch("fetchTodoList");
+    },
     components: {
       TodoHeader,
       TodoList  
