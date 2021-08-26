@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+
 import LocalStore from "./local.store";
 
 Vue.use(Vuex);
@@ -13,6 +14,9 @@ const store = new Vuex.Store({
     todoList: (state) => {
       return state.todoItems;
     },
+    getTodoById: (state) => (id) => {
+      return state.todoItems.find((todo) => todo.id === id);
+    },
   },
   mutations: {
     setTodoList(state, todoItems = []) {
@@ -25,7 +29,7 @@ const store = new Vuex.Store({
       state.todoItems.splice(payload, 1);
     },
     changeDone(state, payload) {
-      Vue.set(state.todoItems, payload.id, payload);
+      Vue.set(state.todoItems, payload.id, payload.done);
     },
   },
   actions: {
@@ -43,10 +47,8 @@ const store = new Vuex.Store({
       commit("addTodo", todo);
     },
     deleteTodo({ commit, state }, payload) {
-      const indexNum = state.todoItems.findIndex(
-        (todo) => todo.id === payload.id
-      );
-      localStore.remove(payload.id);
+      const indexNum = state.todoItems.findIndex((todo) => todo.id === payload);
+      localStore.remove(payload);
       commit("removeTodo", indexNum);
     },
     statusChange({ commit }, payload) {
@@ -57,7 +59,7 @@ const store = new Vuex.Store({
         done: payload.done,
       };
       localStore.save(todo);
-      commit("changeDone", payload.done);
+      commit("changeDone", todo);
     },
   },
 });

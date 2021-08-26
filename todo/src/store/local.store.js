@@ -1,5 +1,5 @@
 class LocalStore {
-  constructor(id) {
+  constructor() {
     this.key = "todo";
   }
 

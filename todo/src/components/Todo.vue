@@ -1,13 +1,14 @@
 <template>
   <div id="todo">
     <TodoHeader />
-    <TodoList />
+     <router-view></router-view>
+    <!-- <TodoList /> -->
   </div>
 </template>
 
 <script>
 import TodoHeader from "./TodoHeader.vue";
-import TodoList from "./TodoList.vue";
+// import TodoList from "./TodoList.vue";
 
 export default {
   created(){
@@ -15,8 +16,8 @@ export default {
     },
     components: {
       TodoHeader,
-      TodoList  
-  }
+      // TodoList  
+  } 
 }
 </script>
 

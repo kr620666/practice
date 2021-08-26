@@ -2,10 +2,12 @@
   <section>
       <ul>
           <li v-for="(todoItem) in todoList" :key="todoItem">
-              <p v-bind:class="{done: todoItem.done}">{{ todoItem.title }}</p>
+              <router-link :to="{ name: 'item', params: { id: todoItem.id }}">
+                <p v-bind:class="{done: todoItem.done}">{{ todoItem.title }}</p>
+              </router-link>
                 <div class="changeTodo">
                   <input type="checkbox" :checked="todoItem.done" v-on:change="statusChange(todoItem)">완료
-                  <button v-on:click="deleteTodo(todoItem)">삭제</button>              
+                  <button v-on:click="deleteTodo(todoItem.id)">삭제</button>              
                 </div>
           </li>
       </ul>
